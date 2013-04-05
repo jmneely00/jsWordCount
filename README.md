@@ -1,4 +1,4 @@
 jsWordCount
 ===========
 
-Silly javascript word counter, mainly as a learning tool
+Silly javascript word counter, mainly useful as a learning tool
