@@ -14,6 +14,10 @@
             alert('The File APIs are not fully supported in this browser.');
         }
     </script>
+    <!--
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="lib/bootstrap/js/bootstrap.js"></script>
     <script src="assets/js/wordCount.js"></script>
@@ -34,11 +38,19 @@
 
     <div class="row span12">
         <button type="submit" class="btn" id="processBtn">Process</button>
+        <button type="submit" class="btn" id="displayBtn">Display Content</button>
+        <p/>
     </div>
 
     <div class="row span12">
-        <div id="fileOutput">
+
+        <div id="fileOverview">
             <!-- Empty div to serve as the target for the file output text -->
+
+        </div>
+
+        <div id="fileOutput">
+
         </div>
     </div>
 </div>
