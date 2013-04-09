@@ -66,11 +66,11 @@ function generateTable(hist) {
             <th>Number of Occurrences</th>\
         </tr>');
 
+    var html = '';
     for (key in hist) {
-        $('#wordHistogramTable').append("<tr><td>"+key+"</td><td>"+hist[key]+"</td></tr>");
+        html += "<tr><td>"+key+"</td><td>"+hist[key]+"</td></tr>";
     }
-
-    $('#wordHistogramTable').append('</table>');
+    $('#wordHistogramTable').append(html).append('</table>');
 }
 
 // Display the contents of the file in the #fileOutput div

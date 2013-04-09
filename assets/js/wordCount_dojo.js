@@ -61,12 +61,11 @@ require(["dojo/dom", "dojo/on", "dojo/domReady!"], function(dom, on){
                 <th>Number of Occurrences</th>\
             </tr>';
 
-        var html = "";
+        var html = '';
         for (key in hist) {
             html += "<tr><td>"+key+"</td><td>"+hist[key]+"</td></tr>";
         }
-        dom.byId('wordHistogramTable').innerHTML += html;
-        dom.byId('wordHistogramTable').innerHTML += '</table>';
+        dom.byId('wordHistogramTable').innerHTML += html + '</table>';
     }
 
     // Display the contents of the file in the #fileOutput div
