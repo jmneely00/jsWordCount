@@ -36,7 +36,7 @@ function countWords(inFile) {
         var words = contents.split(/\s+/);
 
         for (var i = 0; i < words.length; i++) {
-            var strippedWord = words[i].replace(/[.,\-#!$%^*;:{}=_`"()?]/g, '').toLowerCase();
+            var strippedWord = words[i].replace(/[.,\-#!$%^*;:{}=_`"()?\[\]]/g, '').toLowerCase();
 
             if (strippedWord && !strippedWord.match(/\d+/)) {
                 wordCount++;
