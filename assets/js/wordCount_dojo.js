@@ -4,7 +4,7 @@ require(["dojo/dom",
          "dojo/store/Memory",
          "dojo/data/ObjectStore",
          "dojo/domReady!"],
-        function(dom, on, OnDemandGrid, Memory, ObjectStore){
+        function(dom, on, OnDemandGrid, Memory){
         console.log("Ran dojo load function");
         on(dom.byId('processBtn'), 'click', processFile);
         on(dom.byId('displayBtn'), 'click', displayFile);
