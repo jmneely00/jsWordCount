@@ -1,4 +1,10 @@
-require(["dojo/dom", "dojo/on", "dojo/domReady!"], function(dom, on){
+require(["dojo/dom",
+         "dojo/on",
+         "dojox/grid/DataGrid",
+         "dojo/store/Memory",
+         "dojo/data/ObjectStore",
+         "dojo/domReady!"],
+        function(dom, on, DataGrid, Memory, ObjectStore){
         console.log("Ran dojo load function");
         on(dom.byId('processBtn'), 'click', processFile);
         on(dom.byId('displayBtn'), 'click', displayFile);
@@ -25,9 +31,9 @@ require(["dojo/dom", "dojo/on", "dojo/domReady!"], function(dom, on){
         reader.onload = function (theFile) {
             var contents = theFile.target.result;
 
-            var wordCount = 0;
-            var uniqueWords = 0;
-            var hist = {};
+            var wordCount = 0; // TODO: This is just the sum of all word counts in the datastore
+            var uniqueWords = 0; // TODO: Can we get this from the datastore?
+            var dataStore = new Memory();
             var words = contents.split(/\s+/);
 
             for (var i = 0; i < words.length; i++) {
@@ -35,37 +41,52 @@ require(["dojo/dom", "dojo/on", "dojo/domReady!"], function(dom, on){
 
                 if (strippedWord && !strippedWord.match(/\d+/)) {
                     wordCount++;
-                    if (hist[strippedWord]) {
-                        hist[strippedWord] += 1;
+                    
+                    var wordObj = dataStore.get(strippedWord);
+                    if (wordObj) {
+                        wordObj.count += 1;
+                        dataStore.put(wordObj);
                     }
                     else {
-                        hist[strippedWord] = 1;
                         uniqueWords += 1;
+                        dataStore.put({id:strippedWord, count:1});
                     }
                 }
             }
 
             dom.byId('fileOverview').innerHTML = "<pre>" + wordCount + " words total, " + uniqueWords + " unique words</pre>";
-            generateTable(hist);
+            generateTable_DataGrid(dataStore);
+            //generateTable_DGrid(dataStore);
         }
 
         reader.readAsText(inFile);
     }
 
-    // Lousy way to generate a table, but it's working...
-    function generateTable(hist) {
-        dom.byId('fileOutput').innerHTML = '<h2>Word Histogram Table</h2>\
-            <table id="wordHistogramTable" class="table table-striped">\
-            <tr>\
-                <th>Word</th>\
-                <th>Number of Occurrences</th>\
-            </tr>';
-
-        var html = '';
-        for (key in hist) {
-            html += "<tr><td>"+key+"</td><td>"+hist[key]+"</td></tr>";
-        }
-        dom.byId('wordHistogramTable').innerHTML += html + '</table>';
+    // Create a table and add it to the document using the deprecated DataGrid
+    function generateTable_DataGrid(dataStore) {
+        // Since this is using the older DataGrid instead of the new dgrid library,
+        // we have to convert to the object store interface
+        var objectStore = new ObjectStore({ objectStore: dataStore });
+        
+        var grid = new DataGrid({
+            store: objectStore,
+            query: { id: "*" },
+            structure: [
+                { name: "Word", field: "id", width: "400px" },
+                { name: "Number of Occurrences", field: "count", width: "200px" }
+            ],
+            autoHeight: true,
+            autoWidth: true,
+            autoRender: true
+        }, "fileOutput");
+        
+        // since we created this grid programmatically, call startup to render it
+        grid.startup();
+    }
+    
+    // Function to generate/display a table using the new dojo DGrid.
+    function generateTable_DGrid(dataStore) {
+        //code
     }
 
     // Display the contents of the file in the #fileOutput div
