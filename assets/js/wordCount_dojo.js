@@ -1,10 +1,10 @@
 require(["dojo/dom",
          "dojo/on",
-         "dojox/grid/DataGrid",
+         "dgrid/OnDemandGrid",
          "dojo/store/Memory",
          "dojo/data/ObjectStore",
          "dojo/domReady!"],
-        function(dom, on, DataGrid, Memory, ObjectStore){
+        function(dom, on, OnDemandGrid, Memory, ObjectStore){
         console.log("Ran dojo load function");
         on(dom.byId('processBtn'), 'click', processFile);
         on(dom.byId('displayBtn'), 'click', displayFile);
@@ -55,38 +55,24 @@ require(["dojo/dom",
             }
 
             dom.byId('fileOverview').innerHTML = "<pre>" + wordCount + " words total, " + uniqueWords + " unique words</pre>";
-            generateTable_DataGrid(dataStore);
-            //generateTable_DGrid(dataStore);
+            generateTable_DGrid(dataStore);
         }
 
         reader.readAsText(inFile);
     }
-
-    // Create a table and add it to the document using the deprecated DataGrid
-    function generateTable_DataGrid(dataStore) {
-        // Since this is using the older DataGrid instead of the new dgrid library,
-        // we have to convert to the object store interface
-        var objectStore = new ObjectStore({ objectStore: dataStore });
-        
-        var grid = new DataGrid({
-            store: objectStore,
-            query: { id: "*" },
-            structure: [
-                { name: "Word", field: "id", width: "400px" },
-                { name: "Number of Occurrences", field: "count", width: "200px" }
-            ],
-            autoHeight: true,
-            autoWidth: true,
-            autoRender: true
-        }, "fileOutput");
-        
-        // since we created this grid programmatically, call startup to render it
-        grid.startup();
-    }
     
     // Function to generate/display a table using the new dojo DGrid.
     function generateTable_DGrid(dataStore) {
-        //code
+        dom.byId('fileOutput').innerHTML = '';
+        var grid = new OnDemandGrid({
+            store: dataStore,
+            minRowsPerPage: 50,
+            columns: {
+                id: "Word",
+                count: "Count"
+            }
+        }, "fileOutput");
+        grid.startup();
     }
 
     // Display the contents of the file in the #fileOutput div
